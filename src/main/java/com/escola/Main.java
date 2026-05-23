@@ -24,6 +24,9 @@ public class Main {
         // Seed some initial data to facilitate testing
         seedData();
 
+        // Inicializa o servidor Web administrativo em segundo plano
+        WebServer.start(service);
+
         boolean rodando = true;
         while (rodando) {
             exibirMenu();
@@ -51,6 +54,7 @@ public class Main {
                     break;
                 case "0":
                     rodando = false;
+                    WebServer.stop();
                     System.out.println(GREEN + "Obrigado por utilizar o Sistema de Gestão de Matrículas! Até mais." + RESET);
                     break;
                 default:

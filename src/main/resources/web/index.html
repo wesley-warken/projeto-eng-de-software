@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Idiomas - Painel Administrativo</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Design Tokens & Theme Setup */
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --bg-card-hover: #374151;
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            
+            --color-primary: #6366f1; /* Indigo */
+            --color-primary-glow: rgba(99, 102, 241, 0.15);
+            --color-primary-hover: #4f46e5;
+            
+            --color-success: #10b981; /* Emerald */
+            --color-success-glow: rgba(16, 185, 129, 0.1);
+            --color-danger: #ef4444; /* Red */
+            --color-danger-glow: rgba(239, 68, 68, 0.15);
+            --color-warning: #f59e0b; /* Amber */
+            
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Basic Resets & Scrollbars */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* Sidebar Navigation styling */
+        aside {
+            width: 280px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding-left: 8px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--color-primary), #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand-icon i {
+            color: white;
+            width: 22px;
+            height: 22px;
+        }
+
+        .brand-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            background-color: var(--color-primary-glow);
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.05);
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sidebar-footer {
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .system-status {
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+            background-color: var(--color-success);
+            box-shadow: 0 0 10px var(--color-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Main Content Grid Area */
+        main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        .date-badge {
+            background-color: var(--bg-secondary);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Stat Grid Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-primary);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .stat-subtext {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card:nth-child(1) .stat-icon { background-color: rgba(99, 102, 241, 0.1); color: var(--color-primary); }
+        .stat-card:nth-child(2) .stat-icon { background-color: rgba(245, 158, 11, 0.1); color: var(--color-warning); }
+        .stat-card:nth-child(3) .stat-icon { background-color: rgba(16, 185, 129, 0.1); color: var(--color-success); }
+        .stat-card:nth-child(4) .stat-icon { background-color: rgba(239, 68, 68, 0.1); color: var(--color-danger); }
+
+        /* Panel Grid Sections */
+        .content-panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .panel-header-title h3 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .panel-header-title p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .panel-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Buttons & Forms Styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: var(--border-hover);
+        }
+
+        /* Search inputs */
+        .search-container {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px 12px 42px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: var(--font-body);
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-glow);
+        }
+
+        /* Responsive Form Grids */
+        .form-panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .form-panel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-card {
+            background-color: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+        }
+
+        .form-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font-body);
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-primary-glow);
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 48px;
+        }
+
+        /* Custom Tables and Vacancy Bars */
+        .table-container {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 16px 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .student-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--color-primary-hover), #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .student-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-name {
+            font-weight: 600;
+        }
+
+        .student-email {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .badge-success {
+            background-color: var(--color-success-glow);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: var(--color-success);
+        }
+
+        .badge-danger {
+            background-color: var(--color-danger-glow);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: var(--color-danger);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: var(--color-warning);
+        }
+
+        /* Vacancy progress meters */
+        .vacancy-meter-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .vacancy-meter {
+            flex: 1;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .vacancy-meter-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--color-primary), var(--color-success));
+            border-radius: var(--radius-full);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .vacancy-meter-fill.empty {
+            background: var(--color-danger);
+        }
+
+        .vacancy-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        /* Card Layout for Courses Panel */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .course-card {
+            background-color: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .course-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .course-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .course-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background-color: rgba(139, 92, 246, 0.1);
+            color: #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .course-title {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        /* Toasts notifications styling */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 320px;
+            max-width: 400px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+            opacity: 0;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-success { border-color: rgba(16, 185, 129, 0.2); }
+        .toast-success .toast-icon { background-color: var(--color-success-glow); color: var(--color-success); }
+        
+        .toast-error { border-color: rgba(239, 68, 68, 0.2); }
+        .toast-error .toast-icon { background-color: var(--color-danger-glow); color: var(--color-danger); }
+
+        .toast-message {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        /* Dashboard Overview Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-table-card {
+            background-color: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .dashboard-table-card h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .activity-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .activity-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .activity-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* General Empty State Styling */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            background-color: rgba(255, 255, 255, 0.005);
+        }
+
+        .empty-state i {
+            width: 44px;
+            height: 44px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">
+                <i data-lucide="graduation-cap"></i>
+            </div>
+            <div class="brand-text">
+                <h1>IdiomasPro</h1>
+                <p>Secretaria Escolar</p>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav-item active" onclick="switchPanel('dashboard')" id="nav-dashboard">
+                <i data-lucide="layout-dashboard"></i>
+                Dashboard
+            </div>
+            <div class="nav-item" onclick="switchPanel('alunos')" id="nav-alunos">
+                <i data-lucide="users"></i>
+                Alunos
+            </div>
+            <div class="nav-item" onclick="switchPanel('cursos')" id="nav-cursos">
+                <i data-lucide="book-open"></i>
+                Cursos
+            </div>
+            <div class="nav-item" onclick="switchPanel('matriculas')" id="nav-matriculas">
+                <i data-lucide="award"></i>
+                Matrículas
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="system-status"></div>
+            <span class="status-text">Servidor Ativo (JDK 21)</span>
+        </div>
+    </aside>
+
+    <!-- Main Workspace Container -->
+    <main>
+        
+        <header>
+            <div class="header-title">
+                <h2 id="page-title">Geral Informativo</h2>
+                <p id="page-subtitle">Métricas principais e logs do sistema de matrículas.</p>
+            </div>
+            <div class="date-badge">
+                <i data-lucide="calendar"></i>
+                <span id="current-date">Sexta, 22 de Maio</span>
+            </div>
+        </header>
+
+        <!-- Stats Metric Grid Section -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Total Alunos</span>
+                    <span class="stat-value" id="stat-alunos">0</span>
+                    <span class="stat-subtext">Alunos cadastrados</span>
+                </div>
+                <div class="stat-icon">
+                    <i data-lucide="users"></i>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Cursos Ativos</span>
+                    <span class="stat-value" id="stat-cursos">0</span>
+                    <span class="stat-subtext">Cursos disponíveis</span>
+                </div>
+                <div class="stat-icon">
+                    <i data-lucide="book-open"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Vagas Restantes</span>
+                    <span class="stat-value" id="stat-vagas">0</span>
+                    <span class="stat-subtext">Vagas livres em cursos</span>
+                </div>
+                <div class="stat-icon">
+                    <i data-lucide="layers"></i>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-label">Matrículas</span>
+                    <span class="stat-value" id="stat-matriculas">0</span>
+                    <span class="stat-subtext">Matrículas consolidadas</span>
+                </div>
+                <div class="stat-icon">
+                    <i data-lucide="award"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Content Panels (Toggled by Navigation) -->
+
+        <!-- 1. DASHBOARD OVERVIEW PANEL -->
+        <section class="content-panel active" id="panel-dashboard">
+            <div class="dashboard-grid">
+                
+                <div class="dashboard-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4>Matrículas Recentes</h4>
+                        <button class="btn btn-secondary" onclick="switchPanel('matriculas')" style="padding: 6px 12px; font-size: 0.8rem;">Ver todas</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="table-recent-matriculas">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Curso</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dinâmico via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dashboard-table-card">
+                    <h4>Atividade Recente</h4>
+                    <div class="activity-feed" id="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-marker"><i data-lucide="check" style="width:14px; height:14px;"></i></div>
+                            <div class="activity-details">
+                                <span class="activity-text">Sistema de Matrículas Inicializado</span>
+                                <span class="activity-time">Banco de Dados em Memória</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. ALUNOS PANEL -->
+        <section class="content-panel" id="panel-alunos">
+            <div class="form-panel-grid">
+                
+                <!-- Cadastro Form -->
+                <div class="form-card">
+                    <h4><i data-lucide="user-plus" style="color:var(--color-primary);"></i> Cadastrar Novo Aluno</h4>
+                    <form id="form-cadastrar-aluno" onsubmit="handleCadastrarAluno(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="aluno-nome">Nome Completo</label>
+                            <input type="text" class="form-control" id="aluno-nome" placeholder="Ex: Wesley Warken" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="aluno-email">Endereço de E-mail</label>
+                            <input type="email" class="form-control" id="aluno-email" placeholder="Ex: wesley@email.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+                            <i data-lucide="plus"></i> Salvar Aluno
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Diretório Alunos -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="font-family:var(--font-display); font-size:1.15rem;">Alunos Cadastrados</h4>
+                        <div class="search-container">
+                            <i data-lucide="search"></i>
+                            <input type="text" class="search-input" id="search-alunos" placeholder="Buscar aluno por nome ou e-mail..." oninput="filterAlunos()">
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="table-alunos">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Identificador Único</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dinâmico via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. CURSOS PANEL -->
+        <section class="content-panel" id="panel-cursos">
+            <div class="form-panel-grid" style="grid-template-columns: 340px 1fr;">
+                
+                <!-- Cadastro Curso Form -->
+                <div class="form-card">
+                    <h4><i data-lucide="book-open" style="color:var(--color-primary);"></i> Criar Novo Curso</h4>
+                    <form id="form-cadastrar-curso" onsubmit="handleCadastrarCurso(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="curso-nome">Nome do Curso</label>
+                            <input type="text" class="form-control" id="curso-nome" placeholder="Ex: Inglês Avançado" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="curso-vagas">Vagas Totais</label>
+                            <input type="number" class="form-control" id="curso-vagas" min="1" placeholder="Ex: 15" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+                            <i data-lucide="plus"></i> Criar Curso
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Lista de Cursos Cards -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="font-family:var(--font-display); font-size:1.15rem;">Cursos Disponíveis</h4>
+                        <div class="search-container">
+                            <i data-lucide="search"></i>
+                            <input type="text" class="search-input" id="search-cursos" placeholder="Filtrar cursos..." oninput="filterCursos()">
+                        </div>
+                    </div>
+                    
+                    <div class="cards-grid" id="cursos-cards-container">
+                        <!-- Dinâmico via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. MATRÍCULAS PANEL -->
+        <section class="content-panel" id="panel-matriculas">
+            <div class="form-panel-grid">
+                
+                <!-- Efetivar Matrícula Form -->
+                <div class="form-card">
+                    <h4><i data-lucide="award" style="color:var(--color-primary);"></i> Matricular Aluno em Curso</h4>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:20px;">Utilize os campos abaixo selecionando o Aluno cadastrado e o Curso de interesse que possua vagas livres.</p>
+                    <form id="form-matricular" onsubmit="handleMatricular(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="matricula-aluno">Selecionar Aluno</label>
+                            <select class="form-control" id="matricula-aluno" required>
+                                <option value="">-- Selecione o Aluno --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="matricula-curso">Selecionar Curso</label>
+                            <select class="form-control" id="matricula-curso" required>
+                                <option value="">-- Selecione o Curso (Vagas Disponíveis) --</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+                            <i data-lucide="award"></i> Efetivar Matrícula
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Grade de Matrículas Realizadas -->
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4 style="font-family:var(--font-display); font-size:1.15rem;">Controle de Matrículas</h4>
+                        <div class="search-container">
+                            <i data-lucide="search"></i>
+                            <input type="text" class="search-input" id="search-matriculas" placeholder="Filtrar matrículas..." oninput="filterMatriculas()">
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="table-matriculas">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Curso Cadastrado</th>
+                                    <th>Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dinâmico via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Alerts Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts Logic -->
+    <script>
+        // State variables
+        let dbAlunos = [];
+        let dbCursos = [];
+        let dbMatriculas = [];
+
+        // Formatting date
+        const formattedDate = () => {
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const today = new Date();
+            let dateStr = today.toLocaleDateString('pt-BR', options);
+            return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        };
+        document.getElementById('current-date').innerText = formattedDate();
+
+        // Switch Sidebar Panels
+        function switchPanel(panelId) {
+            // Update Active Nav Items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(`nav-${panelId}`).classList.add('active');
+
+            // Update Panel Visibility
+            document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(`panel-${panelId}`).classList.add('active');
+
+            // Update Headers Text
+            const titleEl = document.getElementById('page-title');
+            const subtitleEl = document.getElementById('page-subtitle');
+
+            if (panelId === 'dashboard') {
+                titleEl.innerText = "Geral Informativo";
+                subtitleEl.innerText = "Métricas principais e logs do sistema de matrículas.";
+            } else if (panelId === 'alunos') {
+                titleEl.innerText = "Gerenciar Alunos";
+                subtitleEl.innerText = "Cadastre novos alunos e consulte o diretório escolar.";
+            } else if (panelId === 'cursos') {
+                titleEl.innerText = "Gerenciar Cursos";
+                subtitleEl.innerText = "Abra novas turmas de idiomas e acompanhe o preenchimento de vagas.";
+            } else if (panelId === 'matriculas') {
+                titleEl.innerText = "Efetivar Matrículas";
+                subtitleEl.innerText = "Vincule alunos cadastrados a turmas abertas que possuam vagas.";
+            }
+
+            // Sync database records
+            fetchData();
+        }
+
+        // Display Toast Alert
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icon = type === 'success' ? 'check' : 'alert-circle';
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i data-lucide="${icon}"></i>
+                </div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            // Slide in animation delay
+            setTimeout(() => toast.classList.add('show'), 50);
+
+            // Automatic dismissal
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Fetch Data from Java REST API
+        async function fetchData() {
+            try {
+                const [alunosRes, cursosRes, matriculasRes] = await Promise.all([
+                    fetch('/api/alunos'),
+                    fetch('/api/cursos'),
+                    fetch('/api/matriculas')
+                ]);
+
+                if (alunosRes.ok) dbAlunos = await alunosRes.json();
+                if (cursosRes.ok) dbCursos = await cursosRes.json();
+                if (matriculasRes.ok) dbMatriculas = await matriculasRes.json();
+
+                updateStats();
+                renderDashboard();
+                renderAlunos();
+                renderCursos();
+                renderMatriculas();
+                populateDropdowns();
+            } catch (err) {
+                console.error("Erro ao sincronizar dados do servidor:", err);
+                showToast("Erro de rede ao conectar-se ao servidor.", "error");
+            }
+        }
+
+        // Calculate and Update Dashboard stats cards
+        function updateStats() {
+            document.getElementById('stat-alunos').innerText = dbAlunos.length;
+            document.getElementById('stat-cursos').innerText = dbCursos.length;
+            document.getElementById('stat-matriculas').innerText = dbMatriculas.length;
+
+            const totalVagasLivres = dbCursos.reduce((acc, c) => acc + c.vagasDisponiveis, 0);
+            document.getElementById('stat-vagas').innerText = totalVagasLivres;
+        }
+
+        // Add to recent activity log
+        function addActivityLog(text) {
+            const feed = document.getElementById('activity-feed');
+            const item = document.createElement('div');
+            item.className = 'activity-item';
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            item.innerHTML = `
+                <div class="activity-marker"><i data-lucide="plus" style="width:14px; height:14px;"></i></div>
+                <div class="activity-details">
+                    <span class="activity-text">${text}</span>
+                    <span class="activity-time">${timeStr} - Sucesso</span>
+                </div>
+            `;
+            
+            feed.insertBefore(item, feed.firstChild);
+            
+            // Limit to last 5 activities
+            if (feed.children.length > 5) {
+                feed.lastChild.remove();
+            }
+            lucide.createIcons();
+        }
+
+        // Render Dashboard Tables
+        function renderDashboard() {
+            const tbody = document.querySelector('#table-recent-matriculas tbody');
+            tbody.innerHTML = '';
+
+            const recents = dbMatriculas.slice(-5).reverse();
+
+            if (recents.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-muted);">
+                            Nenhuma matrícula realizada até o momento.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            recents.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="student-badge">
+                            <div class="avatar">${m.aluno.nome.charAt(0)}</div>
+                            <div class="student-details">
+                                <span class="student-name">${m.aluno.nome}</span>
+                                <span class="student-email">${m.aluno.email}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-weight: 500;">${m.curso.nome}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success"><i data-lucide="shield-check" style="width:12px; height:12px;"></i> Efetivada</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // Render Alunos list
+        function renderAlunos(filtered = dbAlunos) {
+            const tbody = document.querySelector('#table-alunos tbody');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding: 30px;">
+                            <div class="empty-state">
+                                <i data-lucide="users"></i>
+                                <p>Nenhum aluno encontrado.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            filtered.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="student-badge">
+                            <div class="avatar">${a.nome.charAt(0)}</div>
+                            <div class="student-details">
+                                <span class="student-name">${a.nome}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-family: monospace; color: var(--color-primary); font-weight: 500;">${a.email}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // Filter Alunos
+        function filterAlunos() {
+            const query = document.getElementById('search-alunos').value.toLowerCase().trim();
+            const filtered = dbAlunos.filter(a => 
+                a.nome.toLowerCase().includes(query) || 
+                a.email.toLowerCase().includes(query)
+            );
+            renderAlunos(filtered);
+        }
+
+        // Render Cursos
+        function renderCursos(filtered = dbCursos) {
+            const container = document.getElementById('cursos-cards-container');
+            container.innerHTML = '';
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <i data-lucide="book-open"></i>
+                        <p>Nenhum curso disponível.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            filtered.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                
+                const percent = Math.round(((c.vagasTotais - c.vagasDisponiveis) / c.vagasTotais) * 100);
+                const statusBadge = c.vagasDisponiveis > 0 
+                    ? `<span class="badge badge-success">${c.vagasDisponiveis} livres</span>` 
+                    : `<span class="badge badge-danger">Esgotado</span>`;
+                
+                card.innerHTML = `
+                    <div class="course-card-header">
+                        <div class="course-card-icon">
+                            <i data-lucide="book"></i>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                    <div>
+                        <h4 class="course-title">${c.nome}</h4>
+                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:500;">Vagas Totais: ${c.vagasTotais}</span>
+                    </div>
+                    
+                    <div class="vacancy-meter-container">
+                        <div class="vacancy-meter">
+                            <div class="vacancy-meter-fill ${c.vagasDisponiveis === 0 ? 'empty' : ''}" style="width: ${100 - percent}%"></div>
+                        </div>
+                        <span class="vacancy-text">${percent}% Ocupado</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // Filter Cursos
+        function filterCursos() {
+            const query = document.getElementById('search-cursos').value.toLowerCase().trim();
+            const filtered = dbCursos.filter(c => c.nome.toLowerCase().includes(query));
+            renderCursos(filtered);
+        }
+
+        // Populate Aluno and Curso Dropdowns inside Enrollments
+        function populateDropdowns() {
+            const alunoSelect = document.getElementById('matricula-aluno');
+            const cursoSelect = document.getElementById('matricula-curso');
+
+            // Reset
+            alunoSelect.innerHTML = '<option value="">-- Selecione o Aluno --</option>';
+            cursoSelect.innerHTML = '<option value="">-- Selecione o Curso (Vagas Disponíveis) --</option>';
+
+            // Fill students alphabetically
+            dbAlunos.slice().sort((a,b) => a.nome.localeCompare(b.nome)).forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.email;
+                opt.innerText = `${a.nome} (${a.email})`;
+                alunoSelect.appendChild(opt);
+            });
+
+            // Fill courses with active vacancies
+            dbCursos.filter(c => c.vagasDisponiveis > 0).forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.nome;
+                opt.innerText = `${c.nome} (Vagas: ${c.vagasDisponiveis}/${c.vagasTotais})`;
+                cursoSelect.appendChild(opt);
+            });
+        }
+
+        // Render Matriculas
+        function renderMatriculas(filtered = dbMatriculas) {
+            const tbody = document.querySelector('#table-matriculas tbody');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 30px;">
+                            <div class="empty-state">
+                                <i data-lucide="award"></i>
+                                <p>Nenhuma matrícula cadastrada.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            filtered.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="student-badge">
+                            <div class="avatar">${m.aluno.nome.charAt(0)}</div>
+                            <div class="student-details">
+                                <span class="student-name">${m.aluno.nome}</span>
+                                <span class="student-email">${m.aluno.email}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-weight: 600;">${m.curso.nome}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success"><i data-lucide="check" style="width:12px; height:12px;"></i> Ativa</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // Filter Matriculas
+        function filterMatriculas() {
+            const query = document.getElementById('search-matriculas').value.toLowerCase().trim();
+            const filtered = dbMatriculas.filter(m => 
+                m.aluno.nome.toLowerCase().includes(query) || 
+                m.aluno.email.toLowerCase().includes(query) || 
+                m.curso.nome.toLowerCase().includes(query)
+            );
+            renderMatriculas(filtered);
+        }
+
+        // Submit Cadastrar Aluno Handler
+        async function handleCadastrarAluno(e) {
+            e.preventDefault();
+            const nomeInput = document.getElementById('aluno-nome');
+            const emailInput = document.getElementById('aluno-email');
+
+            const payload = {
+                nome: nomeInput.value.trim(),
+                email: emailInput.value.trim().toLowerCase()
+            };
+
+            try {
+                const res = await fetch('/api/alunos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || "Erro ao salvar aluno.", "error");
+                    return;
+                }
+
+                showToast(`Aluno "${data.nome}" cadastrado com sucesso!`);
+                addActivityLog(`Novo Aluno Cadastrado: ${data.nome}`);
+                nomeInput.value = '';
+                emailInput.value = '';
+                fetchData();
+            } catch (err) {
+                showToast("Falha na comunicação com o servidor.", "error");
+            }
+        }
+
+        // Submit Cadastrar Curso Handler
+        async function handleCadastrarCurso(e) {
+            e.preventDefault();
+            const nomeInput = document.getElementById('curso-nome');
+            const vagasInput = document.getElementById('curso-vagas');
+
+            const payload = {
+                nome: nomeInput.value.trim(),
+                vagas: parseInt(vagasInput.value.trim())
+            };
+
+            try {
+                const res = await fetch('/api/cursos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || "Erro ao salvar curso.", "error");
+                    return;
+                }
+
+                showToast(`Curso "${data.nome}" criado com sucesso!`);
+                addActivityLog(`Novo Curso Criado: ${data.nome}`);
+                nomeInput.value = '';
+                vagasInput.value = '';
+                fetchData();
+            } catch (err) {
+                showToast("Falha na comunicação com o servidor.", "error");
+            }
+        }
+
+        // Submit Realizar Matrícula Handler
+        async function handleMatricular(e) {
+            e.preventDefault();
+            const alunoSelect = document.getElementById('matricula-aluno');
+            const cursoSelect = document.getElementById('matricula-curso');
+
+            if (!alunoSelect.value || !cursoSelect.value) {
+                showToast("Por favor, selecione ambos os campos.", "error");
+                return;
+            }
+
+            const payload = {
+                emailAluno: alunoSelect.value,
+                nomeCurso: cursoSelect.value
+            };
+
+            try {
+                const res = await fetch('/api/matriculas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.error || "Erro ao efetivar matrícula.", "error");
+                    return;
+                }
+
+                showToast("Matrícula efetivada com sucesso!");
+                addActivityLog(`Matrícula Realizada: ${data.aluno.nome} -> ${data.curso.nome}`);
+                alunoSelect.value = '';
+                cursoSelect.value = '';
+                fetchData();
+            } catch (err) {
+                showToast("Falha na comunicação com o servidor.", "error");
+            }
+        }
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            // Automatically refresh data every 8 seconds in the background
+            setInterval(fetchData, 8000);
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
